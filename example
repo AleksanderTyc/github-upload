@@ -1,0 +1,30 @@
+FOR /R %%G IN (*.m4a) DO (CALL :SUB_VLC "%%G")
+FOR /R %%G IN (*.m4a.mp*) DO (CALL :SUB_RENAME "%%G")
+GOTO :eof
+ 
+:SUB_VLC
+ SET _firstbit=%1
+ SET _qt="
+ CALL SET _newnm=%%_firstbit:%_qt%=%%
+ SET _commanm=%_newnm:,=_COMMA_%
+ REM echo %_commanm%
+ CALL "C:\Program Files\VideoLAN\VLC\vlc" -I dummy -vvv %1 --sout=#transcode{acodec="mpga",ab="512","channels=2",samplerate="44100"}:standard{access="file",mux="mpeg1",dst="%_commanm%.mp3"} vlc://quit
+GOTO :eof
+ 
+:SUB_RENAME
+ SET _origfnm=%1
+ SET _endbit=%_origfnm:*.m4a=%
+ CALL SET _newfilenm=%%_origfnm:.m4a%_endbit%=.mp3%%
+ SET _newfilenm=%_newfilenm:_COMMA_=,%
+ COPY %1 %_newfilenm%
+ DEL %1
+GOTO :eof
+ 
+:eof
+
+https://wiki.videolan.org/VLC_HowTo/Transcode_multiple_videos/
+https://forum.videolan.org/viewtopic.php?t=67377
+https://wiki.videolan.org/Documentation:Streaming_HowTo/Advanced_Streaming_Using_the_Command_Line/
+https://wiki.videolan.org/Documentation:Streaming_HowTo/Command_Line_Examples/
+
+vlc -I dummy -vvv "VIBRATIONAL INFLUENCE -NLP - MIND SCIENCE - LAW OF ATTRACTION and The ULTIMATE MANIFESTATION METHOD.mp4" --sout '#transcode{acodec="mp3",ab=64}:std{access=file,mux=dummy,dst="V.mp3"}' vlc://quit
