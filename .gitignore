@@ -1,2 +1,4 @@
 # For this project (vlc.github.example) only
 *.mp3
+
+# Some changes in .gitignore
